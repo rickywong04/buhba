@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 30,
+    gap: 8,
   },
   statCard: {
     borderRadius: 20,
@@ -140,7 +141,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 120,
-    marginHorizontal: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -148,10 +148,10 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   statCardSmall: {
-    flex: 0.8,
+    flex: 1,
   },
   statCardWide: {
-    flex: 2,
+    flex: 1.4,
   },
   statValue: {
     fontSize: 28,
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 16,
   },
   drinkCard: {
     borderRadius: 15,
@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
   drinkContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 0,
   },
   drinkImage: {
     width: 140,
@@ -184,13 +185,17 @@ const styles = StyleSheet.create({
   drinkNameContainer: {
     flex: 1,
     paddingHorizontal: 15,
+    paddingVertical: 10,
+    minWidth: 0,
   },
   drinkName: {
     fontSize: 22,
     fontWeight: '500',
+    flexWrap: 'wrap',
   },
   drinkArrow: {
     marginRight: 15,
+    marginLeft: 8,
   },
   emptyContainer: {
     alignItems: 'center',

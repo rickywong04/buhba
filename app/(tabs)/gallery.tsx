@@ -192,10 +192,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    paddingTop: 60,
     paddingBottom: 90,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
@@ -223,6 +224,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    minWidth: 0,
+    maxWidth: '48%',
   },
   gridImage: {
     width: '100%',
@@ -230,18 +233,22 @@ const styles = StyleSheet.create({
   },
   gridInfo: {
     padding: 10,
+    minWidth: 0,
   },
   gridTitle: {
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 4,
+    flexWrap: 'wrap',
   },
   gridSubtitle: {
     fontSize: 12,
     marginBottom: 4,
+    flexWrap: 'wrap',
   },
   gridDate: {
     fontSize: 10,
+    flexWrap: 'wrap',
   },
   modalOverlay: {
     position: 'absolute',
@@ -277,15 +284,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
+    flexWrap: 'wrap',
   },
   detailRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    flexWrap: 'wrap',
   },
   detailText: {
     fontSize: 16,
     marginLeft: 10,
+    flex: 1,
+    flexWrap: 'wrap',
   },
   notesContainer: {
     marginTop: 10,
@@ -298,6 +309,7 @@ const styles = StyleSheet.create({
   },
   notesText: {
     fontSize: 14,
+    flexWrap: 'wrap',
   },
   deleteButton: {
     flexDirection: 'row',
