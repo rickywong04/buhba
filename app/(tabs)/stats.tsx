@@ -451,8 +451,10 @@ export default function StatsScreen() {
         <View style={styles.statCard}>
           <FontAwesome name="circle" size={24} color="#604A44" />
           <Text style={styles.statValue}>{pearlsConsumed}</Text>
-          <Text style={styles.statLabel}>PEARLS CONSUMED</Text>
-          <FontAwesome name="question-circle" size={12} color="#604A44" style={{ marginLeft: 4 }} />
+          <View style={styles.statLabelContainer}>
+            <Text style={styles.statLabel}>PEARLS{'\n'}CONSUMED</Text>
+            <FontAwesome name="question-circle" size={12} color="#604A44" style={styles.questionIcon} />
+          </View>
         </View>
       </View>
       
@@ -525,6 +527,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 16,
+    paddingTop: 60,
     paddingBottom: 120,
   },
   header: {
@@ -532,7 +535,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
-    paddingHorizontal: 4,
+    paddingHorizontal: 0,
   },
   headerLogo: {
     fontSize: 24,
@@ -610,11 +613,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
+    gap: 8,
   },
   statCard: {
     flex: 1,
     alignItems: 'center',
-    marginHorizontal: 4,
+    minWidth: 0,
   },
   statValue: {
     fontSize: 20,
@@ -627,6 +631,17 @@ const styles = StyleSheet.create({
     color: '#604A44',
     marginTop: 4,
     textAlign: 'center',
+    lineHeight: 12,
+  },
+  statLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+  },
+  questionIcon: {
+    marginLeft: 4,
+    marginTop: 2,
   },
   spendingSection: {
     marginBottom: 20,

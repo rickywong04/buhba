@@ -280,10 +280,11 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 16,
-    paddingBottom: 40,
+    paddingTop: 60,
+    paddingBottom: 120,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
@@ -314,6 +315,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 20,
+    gap: 10,
   },
   formContainer: {
     width: '100%',
@@ -354,7 +356,6 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     flex: 1,
-    marginHorizontal: 5,
   },
   buttonText: {
     color: '#333',
