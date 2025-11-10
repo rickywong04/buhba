@@ -246,7 +246,13 @@ export default function EditBobaScreen() {
             </LinearGradient>
 
             {/* Teardrop Wave */}
-            <Svg height="60" width="100%" style={styles.wave} viewBox="0 0 400 60">
+            <Svg
+              height="60"
+              width="100%"
+              style={styles.wave}
+              viewBox="0 0 400 60"
+              preserveAspectRatio="none"
+            >
               <Path
                 d="M0,0 Q200,60 400,0 L400,60 L0,60 Z"
                 fill={colors.background}
@@ -370,6 +376,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     position: 'relative',
     marginBottom: -30,
+    width: '100%',
   },
   gradientHeader: {
     paddingTop: 50,
