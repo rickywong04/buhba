@@ -2,9 +2,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Alert,
     Image,
@@ -19,18 +19,19 @@ import {
     View
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import Colors from '../../constants/Colors';
-import { addBobaEntry } from '../../utils/storage';
+import Colors from '../constants/Colors';
+import { getBobaEntryById, updateBobaEntry } from '../utils/storage';
 
-export default function AddBobaScreen() {
+export default function EditBobaScreen() {
   const colorScheme = useColorScheme() || 'light';
   const colors = Colors[colorScheme];
   const router = useRouter();
-  
+  const { entryId } = useLocalSearchParams<{ entryId: string }>();
+
   const [cameraPermission, setCameraPermission] = useState<boolean | null>(null);
   const [galleryPermission, setGalleryPermission] = useState<boolean | null>(null);
   const [locationPermission, setLocationPermission] = useState<boolean | null>(null);
-  
+
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [flavor, setFlavor] = useState('');
   const [price, setPrice] = useState('');
@@ -38,38 +39,70 @@ export default function AddBobaScreen() {
   const [location, setLocation] = useState('');
   const [occasion, setOccasion] = useState('');
   const [rating, setRating] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    requestPermissions();
+    loadEntry();
+  }, []);
 
   const requestPermissions = async () => {
     const cameraResult = await ImagePicker.requestCameraPermissionsAsync();
     setCameraPermission(cameraResult.granted);
-    
+
     const galleryResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     setGalleryPermission(galleryResult.granted);
-    
+
     const locationResult = await Location.requestForegroundPermissionsAsync();
     setLocationPermission(locationResult.granted);
   };
-  
-  React.useEffect(() => {
-    requestPermissions();
-  }, []);
+
+  const loadEntry = async () => {
+    try {
+      if (!entryId) {
+        Alert.alert('Error', 'No entry ID provided');
+        router.back();
+        return;
+      }
+
+      const entry = await getBobaEntryById(entryId);
+      if (!entry) {
+        Alert.alert('Error', 'Entry not found');
+        router.back();
+        return;
+      }
+
+      setImageUri(entry.imageUri);
+      setFlavor(entry.flavor);
+      setPrice(entry.price.toString());
+      setShopName(entry.shopName);
+      setLocation(entry.location);
+      setOccasion(entry.occasion || '');
+      setRating(entry.rating || null);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading entry:', error);
+      Alert.alert('Error', 'Failed to load entry');
+      router.back();
+    }
+  };
 
   const takePicture = async () => {
     if (!cameraPermission) {
       Alert.alert('Permission Required', 'Please allow access to your camera');
       return;
     }
-    
+
     try {
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         aspect: [4, 3],
         quality: 0.8,
       });
-      
+
       if (!result.canceled && result.assets && result.assets[0].uri) {
         setImageUri(result.assets[0].uri);
-        
+
         // Try to get location if permission granted
         if (locationPermission) {
           try {
@@ -78,7 +111,7 @@ export default function AddBobaScreen() {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude
             });
-            
+
             if (address && address[0]) {
               setLocation(`${address[0].city || ''}, ${address[0].region || ''}`);
             }
@@ -92,13 +125,13 @@ export default function AddBobaScreen() {
       Alert.alert('Error', 'Failed to take picture');
     }
   };
-  
+
   const pickImage = async () => {
     if (!galleryPermission) {
       Alert.alert('Permission Required', 'Please allow access to your photo library');
       return;
     }
-    
+
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -106,7 +139,7 @@ export default function AddBobaScreen() {
         aspect: [4, 3],
         quality: 0.8,
       });
-      
+
       if (!result.canceled && result.assets && result.assets[0].uri) {
         setImageUri(result.assets[0].uri);
       }
@@ -115,61 +148,59 @@ export default function AddBobaScreen() {
       Alert.alert('Error', 'Failed to pick image');
     }
   };
-  
-  const saveBobaEntry = async () => {
+
+  const saveChanges = async () => {
     if (!imageUri) {
       Alert.alert('Missing Image', 'Please take or select a photo of your boba drink');
       return;
     }
-    
+
     if (!flavor) {
       Alert.alert('Missing Info', 'Please enter the flavor of your boba drink');
       return;
     }
-    
+
     if (!price) {
       Alert.alert('Missing Info', 'Please enter the price of your boba drink');
       return;
     }
-    
+
     if (!shopName) {
       Alert.alert('Missing Info', 'Please enter the shop name');
       return;
     }
-    
+
     try {
-      await addBobaEntry({
+      await updateBobaEntry(entryId!, {
         imageUri,
         flavor,
         price: parseFloat(price),
         shopName,
         location: location || 'Unknown',
-        date: new Date().toISOString(),
         occasion,
         rating: rating || undefined,
       });
 
-      // Reset form
-      setImageUri(null);
-      setFlavor('');
-      setPrice('');
-      setShopName('');
-      setLocation('');
-      setOccasion('');
-      setRating(null);
-
       Alert.alert(
         'Success',
-        'Your boba drink has been saved!',
-        [{ text: 'OK', onPress: () => router.push('/') }]
+        'Your boba drink has been updated!',
+        [{ text: 'OK', onPress: () => router.back() }]
       );
     } catch (error) {
-      console.error('Error saving boba entry:', error);
-      Alert.alert('Error', 'Failed to save your boba drink');
+      console.error('Error updating boba entry:', error);
+      Alert.alert('Error', 'Failed to update your boba drink');
     }
   };
-  
+
   const ratingEmojis = ['😞', '😐', '🙂', '😊'];
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <Text style={[styles.loadingText, { color: colors.text }]}>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -193,8 +224,8 @@ export default function AddBobaScreen() {
               style={styles.gradientHeader}
             >
               <View style={styles.header}>
-                <TouchableOpacity>
-                  <FontAwesome name="bars" size={24} color="white" />
+                <TouchableOpacity onPress={() => router.back()}>
+                  <FontAwesome name="arrow-left" size={24} color="white" />
                 </TouchableOpacity>
                 <Text style={styles.headerLogo}>buhba</Text>
                 <TouchableOpacity>
@@ -319,8 +350,8 @@ export default function AddBobaScreen() {
             </View>
 
             {/* Save Button */}
-            <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primaryButton }]} onPress={saveBobaEntry}>
-              <Text style={styles.saveButtonText}>Log My Boba!</Text>
+            <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primaryButton }]} onPress={saveChanges}>
+              <Text style={styles.saveButtonText}>Save Changes</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -384,6 +415,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  loadingText: {
+    fontSize: 18,
+    fontFamily: 'Inter_400Regular',
+    textAlign: 'center',
+    marginTop: 100,
   },
   photoButtons: {
     flexDirection: 'row',
@@ -471,4 +508,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Inter_700Bold',
   },
-}); 
+});

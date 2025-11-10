@@ -31,7 +31,6 @@ const CHART_HEIGHT = 200;
 const BAR_WIDTH = (CHART_WIDTH - 60) / 31; // 31 days max
 
 type TimePeriod = 'week' | 'month' | 'year' | 'all-time';
-type ChartType = 'bar' | 'pie';
 type ViewType = 'spending' | 'flavors';
 
 interface DailyData {
@@ -54,7 +53,6 @@ export default function StatsScreen() {
   const isFocused = useIsFocused();
   
   const [timePeriod, setTimePeriod] = useState<TimePeriod>('month');
-  const [chartType, setChartType] = useState<ChartType>('bar');
   const [viewType, setViewType] = useState<ViewType>('spending');
   const [selectedBar, setSelectedBar] = useState<DailyData | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
@@ -150,20 +148,21 @@ export default function StatsScreen() {
     
     setDailyData(dailyArray);
     
-    // Calculate flavor distribution
-    const flavorMap: Record<string, { count: number; totalCost: number }> = {};
+    // Calculate flavor distribution (case-insensitive)
+    const flavorMap: Record<string, { count: number; totalCost: number; originalName: string }> = {};
     filteredEntries.forEach(entry => {
-      if (!flavorMap[entry.flavor]) {
-        flavorMap[entry.flavor] = { count: 0, totalCost: 0 };
+      const normalized = entry.flavor.trim().toLowerCase();
+      if (!flavorMap[normalized]) {
+        flavorMap[normalized] = { count: 0, totalCost: 0, originalName: entry.flavor };
       }
-      flavorMap[entry.flavor].count++;
-      flavorMap[entry.flavor].totalCost += entry.price;
+      flavorMap[normalized].count++;
+      flavorMap[normalized].totalCost += entry.price;
     });
-    
+
     const total = filteredEntries.length;
     const flavorArray: FlavorData[] = Object.entries(flavorMap)
-      .map(([flavor, data]) => ({
-        flavor,
+      .map(([_, data]) => ({
+        flavor: data.originalName,
         count: data.count,
         totalCost: data.totalCost,
         percentage: (data.count / total) * 100
@@ -484,33 +483,9 @@ export default function StatsScreen() {
           </TouchableOpacity>
         </View>
         
-        {viewType === 'spending' && dailyData.length > 0 && (
-          <>
-            {chartType === 'bar' ? renderBarChart() : renderPieChart()}
-            <TouchableOpacity
-              style={[styles.chartToggle, { backgroundColor: colors.secondaryColor }]}
-              onPress={() => setChartType(chartType === 'bar' ? 'pie' : 'bar')}
-            >
-              <Text style={[styles.chartToggleText, { color: colors.text }]}>
-                Switch to {chartType === 'bar' ? 'Pie Chart' : 'Bar Chart'}
-              </Text>
-            </TouchableOpacity>
-          </>
-        )}
-        
-        {viewType === 'flavors' && flavorData.length > 0 && (
-          <>
-            {renderPieChart()}
-            <TouchableOpacity
-              style={[styles.chartToggle, { backgroundColor: colors.secondaryColor }]}
-              onPress={() => setChartType('bar')}
-            >
-              <Text style={[styles.chartToggleText, { color: colors.text }]}>
-                Switch to Bar Chart
-              </Text>
-            </TouchableOpacity>
-          </>
-        )}
+        {viewType === 'spending' && dailyData.length > 0 && renderBarChart()}
+
+        {viewType === 'flavors' && flavorData.length > 0 && renderPieChart()}
       </View>
       
       {/* Reset tooltip when clicking outside */}
@@ -738,17 +713,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_400Regular',
   },
   legendPercentage: {
-    fontSize: 14,
-    fontFamily: 'Inter_600SemiBold',
-  },
-  chartToggle: {
-    alignSelf: 'center',
-    marginTop: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-  },
-  chartToggleText: {
     fontSize: 14,
     fontFamily: 'Inter_600SemiBold',
   },
