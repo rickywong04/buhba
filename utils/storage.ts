@@ -8,7 +8,9 @@ export interface BobaEntry {
   shopName: string;
   location: string;
   date: string;
-  notes?: string;
+  occasion?: string;
+  rating?: number; // 1-4 (sad to happy)
+  notes?: string; // Keep for backwards compatibility
 }
 
 const STORAGE_KEYS = {
@@ -67,24 +69,47 @@ export const getBobaCount = async (): Promise<number> => {
   return entries.length;
 };
 
-// Get most frequent flavor
+// Helper to normalize flavor names (case-insensitive, trimmed)
+const normalizeFlavor = (flavor: string): string => {
+  return flavor.trim().toLowerCase();
+};
+
+// Get most frequent flavor (case-insensitive)
 export const getMostFrequentFlavor = async (): Promise<{ flavor: string; count: number }> => {
   const entries = await getAllBobaEntries();
-  const flavorCounts: Record<string, number> = {};
-  
+  const flavorCounts: Record<string, { count: number; originalName: string }> = {};
+
   entries.forEach(entry => {
-    flavorCounts[entry.flavor] = (flavorCounts[entry.flavor] || 0) + 1;
+    const normalized = normalizeFlavor(entry.flavor);
+    if (!flavorCounts[normalized]) {
+      flavorCounts[normalized] = { count: 0, originalName: entry.flavor };
+    }
+    flavorCounts[normalized].count++;
   });
-  
+
   let mostFrequentFlavor = '';
   let highestCount = 0;
-  
-  Object.entries(flavorCounts).forEach(([flavor, count]) => {
-    if (count > highestCount) {
-      mostFrequentFlavor = flavor;
-      highestCount = count;
+
+  Object.entries(flavorCounts).forEach(([_, data]) => {
+    if (data.count > highestCount) {
+      mostFrequentFlavor = data.originalName;
+      highestCount = data.count;
     }
   });
-  
+
   return { flavor: mostFrequentFlavor || 'None', count: highestCount };
+};
+
+// Update a boba entry
+export const updateBobaEntry = async (id: string, updates: Partial<Omit<BobaEntry, 'id'>>): Promise<BobaEntry | null> => {
+  const entries = await getAllBobaEntries();
+  const index = entries.findIndex(entry => entry.id === id);
+
+  if (index === -1) {
+    return null;
+  }
+
+  entries[index] = { ...entries[index], ...updates };
+  await AsyncStorage.setItem(STORAGE_KEYS.BOBA_ENTRIES, JSON.stringify(entries));
+  return entries[index];
 }; 

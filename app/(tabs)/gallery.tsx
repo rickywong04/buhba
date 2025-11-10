@@ -1,5 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
@@ -10,6 +11,7 @@ export default function GalleryScreen() {
   const colorScheme = useColorScheme() || 'light';
   const colors = Colors[colorScheme];
   const isFocused = useIsFocused();
+  const router = useRouter();
   const [bobaEntries, setBobaEntries] = useState<BobaEntry[]>([]);
   const [selectedEntry, setSelectedEntry] = useState<BobaEntry | null>(null);
 
@@ -114,7 +116,25 @@ export default function GalleryScreen() {
                 {formatPrice(selectedEntry.price)}
               </Text>
             </View>
-            
+
+            {selectedEntry.occasion ? (
+              <View style={styles.detailRow}>
+                <FontAwesome name="comment-o" size={16} color={colors.text} />
+                <Text style={[styles.detailText, { color: colors.text }]}>
+                  {selectedEntry.occasion}
+                </Text>
+              </View>
+            ) : null}
+
+            {selectedEntry.rating ? (
+              <View style={styles.detailRow}>
+                <FontAwesome name="star" size={16} color={colors.text} />
+                <Text style={[styles.detailText, { color: colors.text }]}>
+                  {['😞', '😐', '🙂', '😊'][selectedEntry.rating - 1]} ({selectedEntry.rating}/4)
+                </Text>
+              </View>
+            ) : null}
+
             {selectedEntry.notes ? (
               <View style={styles.notesContainer}>
                 <Text style={[styles.notesLabel, { color: colors.text }]}>Notes:</Text>
@@ -123,14 +143,30 @@ export default function GalleryScreen() {
                 </Text>
               </View>
             ) : null}
-            
-            <TouchableOpacity 
-              style={[styles.deleteButton, { backgroundColor: colors.danger }]} 
-              onPress={() => handleDelete(selectedEntry.id)}
-            >
-              <FontAwesome name="trash" size={16} color="#fff" />
-              <Text style={styles.deleteButtonText}>Delete</Text>
-            </TouchableOpacity>
+
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.editButton, { backgroundColor: colors.primaryButton }]}
+                onPress={() => {
+                  setSelectedEntry(null);
+                  router.push({
+                    pathname: '/edit',
+                    params: { entryId: selectedEntry.id }
+                  });
+                }}
+              >
+                <FontAwesome name="edit" size={16} color="#fff" />
+                <Text style={styles.actionButtonText}>Edit</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.actionButton, styles.deleteButton, { backgroundColor: colors.danger }]}
+                onPress={() => handleDelete(selectedEntry.id)}
+              >
+                <FontAwesome name="trash" size={16} color="#fff" />
+                <Text style={styles.actionButtonText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -316,15 +352,22 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_400Regular',
     flexWrap: 'wrap',
   },
-  deleteButton: {
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 16,
+  },
+  actionButton: {
+    flex: 1,
     flexDirection: 'row',
     borderRadius: 8,
     padding: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
   },
-  deleteButtonText: {
+  editButton: {},
+  deleteButton: {},
+  actionButtonText: {
     color: '#fff',
     fontSize: 16,
     fontFamily: 'Inter_700Bold',
