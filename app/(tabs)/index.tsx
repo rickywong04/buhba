@@ -117,16 +117,16 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 28,
-    fontWeight: '400',
+    fontFamily: 'Inter_400Regular',
   },
   title: {
     fontSize: 36,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     marginTop: 5,
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: '600',
+    fontFamily: 'Inter_600SemiBold',
     marginBottom: 16,
   },
   statsRow: {
@@ -155,12 +155,12 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     marginBottom: 5,
   },
   statLabel: {
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: 'Inter_500Medium',
   },
   recentHeader: {
     flexDirection: 'row',
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   },
   drinkName: {
     fontSize: 22,
-    fontWeight: '500',
+    fontFamily: 'Inter_500Medium',
     flexWrap: 'wrap',
   },
   drinkArrow: {
@@ -204,6 +204,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 18,
+    fontFamily: 'Inter_400Regular',
     textAlign: 'center',
   },
 });

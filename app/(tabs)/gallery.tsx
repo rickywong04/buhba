@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
+    fontFamily: 'Inter_400Regular',
     textAlign: 'center',
   },
   gridContainer: {
@@ -237,17 +238,19 @@ const styles = StyleSheet.create({
   },
   gridTitle: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     marginBottom: 4,
     flexWrap: 'wrap',
   },
   gridSubtitle: {
     fontSize: 12,
+    fontFamily: 'Inter_400Regular',
     marginBottom: 4,
     flexWrap: 'wrap',
   },
   gridDate: {
     fontSize: 10,
+    fontFamily: 'Inter_400Regular',
     flexWrap: 'wrap',
   },
   modalOverlay: {
@@ -282,7 +285,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     marginBottom: 16,
     flexWrap: 'wrap',
   },
@@ -294,6 +297,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 16,
+    fontFamily: 'Inter_400Regular',
     marginLeft: 10,
     flex: 1,
     flexWrap: 'wrap',
@@ -304,11 +308,12 @@ const styles = StyleSheet.create({
   },
   notesLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     marginBottom: 4,
   },
   notesText: {
     fontSize: 14,
+    fontFamily: 'Inter_400Regular',
     flexWrap: 'wrap',
   },
   deleteButton: {
@@ -322,7 +327,7 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     marginLeft: 8,
   },
 }); 

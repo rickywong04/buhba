@@ -188,17 +188,17 @@ export default function AddBobaScreen() {
           )}
           
           <View style={styles.imageButtons}>
-            <TouchableOpacity 
-              style={[styles.button, { backgroundColor: colors.secondaryButton }]} 
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: colors.secondaryButton }]}
               onPress={takePicture}
             >
-              <Text style={styles.buttonText}>Take Photo</Text>
+              <Text style={[styles.buttonText, { color: colors.text }]}>Take Photo</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.button, { backgroundColor: colors.secondaryButton }]} 
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: colors.secondaryButton }]}
               onPress={pickImage}
             >
-              <Text style={styles.buttonText}>Choose Photo</Text>
+              <Text style={[styles.buttonText, { color: colors.text }]}>Choose Photo</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -206,10 +206,10 @@ export default function AddBobaScreen() {
         <View style={styles.formContainer}>
           <View style={styles.inputGroup}>
             <Text style={[styles.label, { color: colors.text }]}>Flavor *</Text>
-            <TextInput 
+            <TextInput
               style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
               placeholder="e.g. Taro Milk Tea"
-              placeholderTextColor="#999"
+              placeholderTextColor={colors.secondaryText || '#999'}
               value={flavor}
               onChangeText={setFlavor}
             />
@@ -217,10 +217,10 @@ export default function AddBobaScreen() {
           
           <View style={styles.inputGroup}>
             <Text style={[styles.label, { color: colors.text }]}>Price *</Text>
-            <TextInput 
+            <TextInput
               style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
               placeholder="e.g. 5.99"
-              placeholderTextColor="#999"
+              placeholderTextColor={colors.secondaryText || '#999'}
               keyboardType="decimal-pad"
               value={price}
               onChangeText={setPrice}
@@ -229,10 +229,10 @@ export default function AddBobaScreen() {
           
           <View style={styles.inputGroup}>
             <Text style={[styles.label, { color: colors.text }]}>Shop Name *</Text>
-            <TextInput 
+            <TextInput
               style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
               placeholder="e.g. Boba Guys"
-              placeholderTextColor="#999"
+              placeholderTextColor={colors.secondaryText || '#999'}
               value={shopName}
               onChangeText={setShopName}
             />
@@ -240,10 +240,10 @@ export default function AddBobaScreen() {
           
           <View style={styles.inputGroup}>
             <Text style={[styles.label, { color: colors.text }]}>Location</Text>
-            <TextInput 
+            <TextInput
               style={[styles.input, { backgroundColor: colors.card, color: colors.text }]}
               placeholder="e.g. San Francisco, CA"
-              placeholderTextColor="#999"
+              placeholderTextColor={colors.secondaryText || '#999'}
               value={location}
               onChangeText={setLocation}
             />
@@ -251,10 +251,10 @@ export default function AddBobaScreen() {
           
           <View style={styles.inputGroup}>
             <Text style={[styles.label, { color: colors.text }]}>Notes</Text>
-            <TextInput 
+            <TextInput
               style={[styles.textArea, { backgroundColor: colors.card, color: colors.text }]}
               placeholder="Any additional notes..."
-              placeholderTextColor="#999"
+              placeholderTextColor={colors.secondaryText || '#999'}
               multiline
               numberOfLines={4}
               value={notes}
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -309,6 +309,7 @@ const styles = StyleSheet.create({
   },
   imagePlaceholderText: {
     fontSize: 16,
+    fontFamily: 'Inter_400Regular',
   },
   imageButtons: {
     flexDirection: 'row',
@@ -325,18 +326,20 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
+    fontFamily: 'Inter_600SemiBold',
     marginBottom: 8,
-    fontWeight: '600',
   },
   input: {
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
+    fontFamily: 'Inter_400Regular',
   },
   textArea: {
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
+    fontFamily: 'Inter_400Regular',
     textAlignVertical: 'top',
     minHeight: 100,
   },
@@ -349,7 +352,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
   },
   button: {
     borderRadius: 8,
@@ -358,8 +361,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonText: {
-    color: '#333',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: 'Inter_600SemiBold',
   },
 }); 

@@ -23,7 +23,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme].tint,
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#604A44', // Brown color from the image
+          backgroundColor: Colors[colorScheme].primaryColor, // Primary brown color
           borderTopWidth: 0,
           elevation: 0,
           height: 60,
@@ -62,7 +62,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          tabBarActiveTintColor: '#E49E4C', // Active color from the image
+          tabBarActiveTintColor: Colors[colorScheme].accent,
           tabBarInactiveTintColor: '#CCCCCC',
         }}
       />
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#E49E4C',
+    backgroundColor: '#EE961F', // Accent orange color
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',

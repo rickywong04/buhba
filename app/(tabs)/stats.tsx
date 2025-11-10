@@ -16,6 +16,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Circle, Path, Rect, Text as SvgText } from 'react-native-svg';
 import Colors from '../../constants/Colors';
+import Fonts from '../../constants/Fonts';
 import {
     BobaEntry,
     getAllBobaEntries,
@@ -212,7 +213,7 @@ export default function StatsScreen() {
               x={CHART_WIDTH - 10}
               y={20}
               fontSize="12"
-              fill="#604A44"
+              fill={colors.primaryColor}
               textAnchor="end"
             >
               ${maxCost.toFixed(0)}
@@ -221,19 +222,19 @@ export default function StatsScreen() {
               x={CHART_WIDTH - 10}
               y={CHART_HEIGHT / 2}
               fontSize="12"
-              fill="#604A44"
+              fill={colors.primaryColor}
               textAnchor="end"
             >
               ${(maxCost / 2).toFixed(0)}
             </SvgText>
-            
+
             {/* Bars */}
             {dailyData.map((data, index) => {
               const barHeight = (data.cost / maxCost) * maxHeight;
               const x = 50 + (index * barSpacing);
               const y = CHART_HEIGHT - 40 - barHeight;
               const barWidth = Math.min(barSpacing * 0.8, 20);
-              
+
               return (
                 <React.Fragment key={data.date}>
                   <Rect
@@ -241,7 +242,7 @@ export default function StatsScreen() {
                     y={y}
                     width={barWidth}
                     height={barHeight}
-                    fill="#E49E4C"
+                    fill={colors.accent}
                     rx={4}
                   />
                   {/* Day label */}
@@ -249,7 +250,7 @@ export default function StatsScreen() {
                     x={x + barWidth / 2}
                     y={CHART_HEIGHT - 20}
                     fontSize="10"
-                    fill="#604A44"
+                    fill={colors.primaryColor}
                     textAnchor="middle"
                   >
                     {data.day}
@@ -297,11 +298,12 @@ export default function StatsScreen() {
               {
                 left: tooltipPosition.x,
                 top: tooltipPosition.y,
+                backgroundColor: colors.card,
               }
             ]}
           >
-            <Text style={styles.tooltipCost}>{formatPrice(selectedBar.cost)}</Text>
-            <Text style={styles.tooltipDate}>{selectedBar.formattedDate}</Text>
+            <Text style={[styles.tooltipCost, { color: colors.text }]}>{formatPrice(selectedBar.cost)}</Text>
+            <Text style={[styles.tooltipDate, { color: colors.text }]}>{selectedBar.formattedDate}</Text>
           </View>
         )}
       </View>
@@ -317,7 +319,7 @@ export default function StatsScreen() {
     
     let currentAngle = -90; // Start from top
     
-    const colors = ['#E49E4C', '#604A44', '#D4A574', '#8B6F47', '#A67C52'];
+    const chartColors = ['#EE961F', '#583B39', '#85695D', '#FAF0E2', '#C4A57B'];
     
     const paths = flavorData.map((data, index) => {
       const angle = (data.percentage / 100) * 360;
@@ -343,7 +345,7 @@ export default function StatsScreen() {
       
       currentAngle += angle;
       
-      return { path, color: colors[index % colors.length], data };
+      return { path, color: chartColors[index % chartColors.length], data };
     });
     
     return (
@@ -362,9 +364,9 @@ export default function StatsScreen() {
         <View style={styles.legendContainer}>
           {flavorData.map((data, index) => (
             <View key={data.flavor} style={styles.legendItem}>
-              <View style={[styles.legendColor, { backgroundColor: colors[index % colors.length] }]} />
-              <Text style={styles.legendText}>{data.flavor}</Text>
-              <Text style={styles.legendPercentage}>{Math.round(data.percentage)}%</Text>
+              <View style={[styles.legendColor, { backgroundColor: chartColors[index % chartColors.length] }]} />
+              <Text style={[styles.legendText, { color: colors.text }]}>{data.flavor}</Text>
+              <Text style={[styles.legendPercentage, { color: colors.text }]}>{Math.round(data.percentage)}%</Text>
             </View>
           ))}
         </View>
@@ -375,26 +377,26 @@ export default function StatsScreen() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: '#FFFFFF' }]}
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.contentContainer}
     >
-      <StatusBar style="dark" />
-      
+      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity>
-          <FontAwesome name="bars" size={24} color="#604A44" />
+          <FontAwesome name="bars" size={24} color={colors.primaryColor} />
         </TouchableOpacity>
-        <Text style={styles.headerLogo}>buhba</Text>
+        <Text style={[styles.headerLogo, { color: colors.primaryColor }]}>buhba</Text>
         <TouchableOpacity>
-          <View style={styles.profileIcon}>
-            <FontAwesome name="user" size={20} color="#604A44" />
+          <View style={[styles.profileIcon, { backgroundColor: colors.secondaryColor }]}>
+            <FontAwesome name="user" size={20} color={colors.primaryColor} />
           </View>
         </TouchableOpacity>
       </View>
-      
-      <Text style={styles.title}>Your Boba Stats</Text>
+
+      <Text style={[styles.title, { color: colors.text }]}>Your Boba Stats</Text>
       
       {/* Go-To Flavor Card */}
       <LinearGradient
@@ -414,18 +416,19 @@ export default function StatsScreen() {
       </LinearGradient>
       
       {/* Time Period Selector */}
-      <View style={styles.timePeriodContainer}>
+      <View style={[styles.timePeriodContainer, { backgroundColor: colors.secondaryColor }]}>
         {(['week', 'month', 'year', 'all-time'] as TimePeriod[]).map((period) => (
           <TouchableOpacity
             key={period}
             style={[
               styles.timePeriodButton,
-              timePeriod === period && styles.timePeriodButtonActive
+              timePeriod === period && [styles.timePeriodButtonActive, { backgroundColor: colors.accent }]
             ]}
             onPress={() => setTimePeriod(period)}
           >
             <Text style={[
               styles.timePeriodText,
+              { color: colors.text },
               timePeriod === period && styles.timePeriodTextActive
             ]}>
               {period === 'week' ? 'This week' : period === 'month' ? 'Month' : period === 'year' ? 'Year' : 'All-Time'}
@@ -437,47 +440,47 @@ export default function StatsScreen() {
       {/* Statistics Cards */}
       <View style={styles.statsRow}>
         <View style={styles.statCard}>
-          <FontAwesome name="coffee" size={24} color="#604A44" />
-          <Text style={styles.statValue}>{drinkCount}</Text>
-          <Text style={styles.statLabel}>DRINKS</Text>
+          <FontAwesome name="coffee" size={24} color={colors.primaryColor} />
+          <Text style={[styles.statValue, { color: colors.text }]}>{drinkCount}</Text>
+          <Text style={[styles.statLabel, { color: colors.text }]}>DRINKS</Text>
         </View>
-        
+
         <View style={styles.statCard}>
-          <FontAwesome name="glass" size={24} color="#604A44" />
-          <Text style={styles.statValue}>{flavorCount}</Text>
-          <Text style={styles.statLabel}>FLAVORS</Text>
+          <FontAwesome name="glass" size={24} color={colors.primaryColor} />
+          <Text style={[styles.statValue, { color: colors.text }]}>{flavorCount}</Text>
+          <Text style={[styles.statLabel, { color: colors.text }]}>FLAVORS</Text>
         </View>
-        
+
         <View style={styles.statCard}>
-          <FontAwesome name="circle" size={24} color="#604A44" />
-          <Text style={styles.statValue}>{pearlsConsumed}</Text>
+          <FontAwesome name="circle" size={24} color={colors.primaryColor} />
+          <Text style={[styles.statValue, { color: colors.text }]}>{pearlsConsumed}</Text>
           <View style={styles.statLabelContainer}>
-            <Text style={styles.statLabel}>PEARLS{'\n'}CONSUMED</Text>
-            <FontAwesome name="question-circle" size={12} color="#604A44" style={styles.questionIcon} />
+            <Text style={[styles.statLabel, { color: colors.text }]}>PEARLS{'\n'}CONSUMED</Text>
+            <FontAwesome name="question-circle" size={12} color={colors.primaryColor} style={styles.questionIcon} />
           </View>
         </View>
       </View>
-      
+
       {/* Spending Section */}
       <View style={styles.spendingSection}>
         <View style={styles.spendingRow}>
-          <FontAwesome name="credit-card" size={20} color="#604A44" />
-          <Text style={styles.spendingLabel}>TOTAL SPENDING</Text>
+          <FontAwesome name="credit-card" size={20} color={colors.primaryColor} />
+          <Text style={[styles.spendingLabel, { color: colors.text }]}>TOTAL SPENDING</Text>
         </View>
-        <Text style={styles.spendingAmount}>{formatPrice(totalSpent)}</Text>
-        <Text style={styles.avgPrice}>AVG. PRICE PER BOBA: {formatPrice(avgPrice)}</Text>
+        <Text style={[styles.spendingAmount, { color: colors.text }]}>{formatPrice(totalSpent)}</Text>
+        <Text style={[styles.avgPrice, { color: colors.text }]}>AVG. PRICE PER BOBA: {formatPrice(avgPrice)}</Text>
       </View>
       
       {/* Chart Section */}
       <View style={styles.chartSection}>
         <View style={styles.chartHeader}>
-          <Text style={styles.dateRange}>{formatDateRange()}</Text>
+          <Text style={[styles.dateRange, { color: colors.text }]}>{formatDateRange()}</Text>
           <TouchableOpacity
-            style={styles.dropdownButton}
+            style={[styles.dropdownButton, { backgroundColor: colors.accent }]}
             onPress={() => setViewType(viewType === 'spending' ? 'flavors' : 'spending')}
           >
             <Text style={styles.dropdownText}>{viewType === 'spending' ? 'Spending' : 'Flavors'}</Text>
-            <FontAwesome name="chevron-down" size={14} color="#E49E4C" />
+            <FontAwesome name="chevron-down" size={14} color="white" />
           </TouchableOpacity>
         </View>
         
@@ -485,10 +488,10 @@ export default function StatsScreen() {
           <>
             {chartType === 'bar' ? renderBarChart() : renderPieChart()}
             <TouchableOpacity
-              style={styles.chartToggle}
+              style={[styles.chartToggle, { backgroundColor: colors.secondaryColor }]}
               onPress={() => setChartType(chartType === 'bar' ? 'pie' : 'bar')}
             >
-              <Text style={styles.chartToggleText}>
+              <Text style={[styles.chartToggleText, { color: colors.text }]}>
                 Switch to {chartType === 'bar' ? 'Pie Chart' : 'Bar Chart'}
               </Text>
             </TouchableOpacity>
@@ -499,10 +502,10 @@ export default function StatsScreen() {
           <>
             {renderPieChart()}
             <TouchableOpacity
-              style={styles.chartToggle}
+              style={[styles.chartToggle, { backgroundColor: colors.secondaryColor }]}
               onPress={() => setChartType('bar')}
             >
-              <Text style={styles.chartToggleText}>
+              <Text style={[styles.chartToggleText, { color: colors.text }]}>
                 Switch to Bar Chart
               </Text>
             </TouchableOpacity>
@@ -539,23 +542,19 @@ const styles = StyleSheet.create({
   },
   headerLogo: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#604A44',
-    fontStyle: 'italic',
+    fontFamily: 'Jua_400Regular',
   },
   profileIcon: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#F9F1E1',
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     marginBottom: 20,
-    color: '#604A44',
   },
   flavorCard: {
     borderRadius: 20,
@@ -569,23 +568,24 @@ const styles = StyleSheet.create({
   },
   flavorCardTitle: {
     fontSize: 16,
+    fontFamily: 'Inter_400Regular',
     color: 'white',
     marginBottom: 8,
   },
   flavorCardFlavor: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
     color: 'white',
     marginBottom: 4,
   },
   flavorCardSubtext: {
     fontSize: 14,
+    fontFamily: 'Inter_400Regular',
     color: 'white',
     opacity: 0.9,
   },
   timePeriodContainer: {
     flexDirection: 'row',
-    backgroundColor: '#F9F1E1',
     borderRadius: 12,
     padding: 4,
     marginBottom: 20,
@@ -597,17 +597,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
   },
-  timePeriodButtonActive: {
-    backgroundColor: '#E49E4C',
-  },
+  timePeriodButtonActive: {},
   timePeriodText: {
     fontSize: 12,
-    color: '#604A44',
-    fontWeight: '500',
+    fontFamily: 'Inter_500Medium',
   },
   timePeriodTextActive: {
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'Inter_700Bold',
   },
   statsRow: {
     flexDirection: 'row',
@@ -622,13 +619,12 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#604A44',
+    fontFamily: 'Inter_700Bold',
     marginTop: 8,
   },
   statLabel: {
     fontSize: 10,
-    color: '#604A44',
+    fontFamily: 'Inter_500Medium',
     marginTop: 4,
     textAlign: 'center',
     lineHeight: 12,
@@ -653,19 +649,17 @@ const styles = StyleSheet.create({
   },
   spendingLabel: {
     fontSize: 14,
-    color: '#604A44',
+    fontFamily: 'Inter_600SemiBold',
     marginLeft: 8,
-    fontWeight: '600',
   },
   spendingAmount: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#604A44',
+    fontFamily: 'Inter_700Bold',
     marginBottom: 4,
   },
   avgPrice: {
     fontSize: 14,
-    color: '#604A44',
+    fontFamily: 'Inter_400Regular',
   },
   chartSection: {
     marginTop: 20,
@@ -678,12 +672,11 @@ const styles = StyleSheet.create({
   },
   dateRange: {
     fontSize: 14,
-    color: '#604A44',
+    fontFamily: 'Inter_400Regular',
   },
   dropdownButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E49E4C',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -691,7 +684,7 @@ const styles = StyleSheet.create({
   dropdownText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: 'Inter_600SemiBold',
     marginRight: 6,
   },
   chartContainer: {
@@ -706,7 +699,6 @@ const styles = StyleSheet.create({
   },
   tooltip: {
     position: 'absolute',
-    backgroundColor: '#F5F5F5',
     padding: 12,
     borderRadius: 8,
     shadowColor: '#000',
@@ -718,13 +710,12 @@ const styles = StyleSheet.create({
   },
   tooltipCost: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#604A44',
+    fontFamily: 'Inter_700Bold',
     marginBottom: 4,
   },
   tooltipDate: {
     fontSize: 12,
-    color: '#604A44',
+    fontFamily: 'Inter_400Regular',
   },
   legendContainer: {
     marginTop: 20,
@@ -744,25 +735,22 @@ const styles = StyleSheet.create({
   legendText: {
     flex: 1,
     fontSize: 14,
-    color: '#604A44',
+    fontFamily: 'Inter_400Regular',
   },
   legendPercentage: {
     fontSize: 14,
-    color: '#604A44',
-    fontWeight: '600',
+    fontFamily: 'Inter_600SemiBold',
   },
   chartToggle: {
     alignSelf: 'center',
     marginTop: 16,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: '#F9F1E1',
     borderRadius: 20,
   },
   chartToggleText: {
-    color: '#604A44',
     fontSize: 14,
-    fontWeight: '600',
+    fontFamily: 'Inter_600SemiBold',
   },
   overlay: {
     position: 'absolute',
@@ -778,7 +766,7 @@ const styles = StyleSheet.create({
   },
   emptyStateText: {
     fontSize: 14,
-    color: '#604A44',
+    fontFamily: 'Inter_400Regular',
     opacity: 0.6,
   },
 });
