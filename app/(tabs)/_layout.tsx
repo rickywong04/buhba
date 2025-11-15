@@ -43,18 +43,12 @@ export default function TabLayout() {
         },
       }}>
       <Tabs.Screen
-        name="friends"
+        name="feed"
         options={{
-          title: 'Friends',
+          title: 'Feed',
           tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} />,
           tabBarActiveTintColor: 'white',
           tabBarInactiveTintColor: '#CCCCCC',
-        }}
-        listeners={{
-          tabPress: (e) => {
-            // Prevent default action for now - Friends tab not implemented yet
-            e.preventDefault();
-          },
         }}
       />
       <Tabs.Screen
